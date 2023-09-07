@@ -16,6 +16,16 @@ interface PostProsp {
   };
 }
 
+type SessionUpdated = {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+  expires: string;
+  activeSubscription?: object;
+};
+
 export default function Post({ post }: PostProsp) {
   return (
     <>
@@ -41,7 +51,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   params,
 }) => {
-  const session = await getSession({ req });
+  const session: SessionUpdated = await getSession({ req });
 
   const { slug } = params;
 

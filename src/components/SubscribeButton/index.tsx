@@ -8,8 +8,32 @@ interface SubscribeButtonProps {
   priceId: string;
 }
 
+type Session = {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  };
+  expires: string;
+  activeSubscription?: object;
+};
+
+type UpdateSession = (data?: any) => Promise<Session | null>;
+
+type SessionContextValue<R extends boolean = false> = R extends true
+  ?
+      | { update: UpdateSession; data: Session; status: "authenticated" }
+      | { update: UpdateSession; data: null; status: "loading" }
+  :
+      | { update: UpdateSession; data: Session; status: "authenticated" }
+      | {
+          update: UpdateSession;
+          data: null;
+          status: "unauthenticated" | "loading";
+        };
+
 export function SubscribeButton({ priceId }: SubscribeButtonProps) {
-  const { data: session } = useSession();
+  const session: SessionContextValue = useSession();
   const router = useRouter();
 
   async function handleSubscribe() {
@@ -18,7 +42,7 @@ export function SubscribeButton({ priceId }: SubscribeButtonProps) {
       return;
     }
 
-    if (session?.activeSubscription) {
+    if (session.data?.activeSubscription) {
       router.push("/posts");
       return;
     }
