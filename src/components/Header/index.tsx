@@ -18,6 +18,7 @@ export function Header() {
             legacyBehavior
             activeClassName={styles.active}
             href="/posts"
+            prefetch
           >
             <a>Posts</a>
           </ActiveLink>

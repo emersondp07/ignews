@@ -44,7 +44,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   const session = await getSession({ req });
 
   const { slug } = params;
-  console.log(slug);
+
+  if (!session?.activeSubscription) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   const prismic = createClient({ req });
 
